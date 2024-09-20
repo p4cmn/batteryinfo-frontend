@@ -2,6 +2,7 @@
 #define MAINCONTROLLER_H
 
 #include <QObject>
+#include <QTimer>
 #include "tcpclient.h"
 
 class MainController : public QObject {
@@ -9,10 +10,12 @@ class MainController : public QObject {
 
 private:
   TCPClient* client;
+  QTimer* updateTimer;
 
 public:
   explicit MainController(QObject *parent = nullptr);
-
+  void startAutoUpdate(int intervalMs);
+  void stopAutoUpdate();
   void requestBatteryInfo();
   void handleSleepRequest();
   void handleHibernateRequest();

@@ -1,7 +1,7 @@
 #include "tcpclient.h"
 #include <QDebug>
 
-TCPClient::TCPClient(QObject *parent): QObject(parent) {
+TCPClient::TCPClient(QObject *parent) : QObject(parent), socket(new QTcpSocket(this)) {
   connect(socket, &QTcpSocket::connected, this, &TCPClient::onConnected);
   connect(socket, &QTcpSocket::disconnected, this, &TCPClient::onDisconnected);
   connect(socket, &QTcpSocket::readyRead, this, &TCPClient::onReadyRead);
@@ -37,7 +37,7 @@ void TCPClient::onConnected() {
 
 void TCPClient::onReadyRead() {
   QByteArray response = socket->readAll();
-  qDebug() << "Response from server:" << response;
+  emit dataReceived(response);
 }
 
 void TCPClient::onDisconnected() {

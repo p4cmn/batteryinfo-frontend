@@ -20,14 +20,17 @@ public:
   void sendSleepRequest();
   void sendHibernateRequest();
 
-private:
-  void sendRequest(const QJsonObject &request);
+signals:
+  void dataReceived(const QByteArray &data);  // Сигнал для передачи данных
 
-private slots:
+public slots:
+  void onReadyRead();  // Слот для обработки ответа сервера
   void onConnected();
-  void onReadyRead();
   void onDisconnected();
   void onError(QAbstractSocket::SocketError socketError);
+
+private:
+  void sendRequest(const QJsonObject &request);
 };
 
 #endif // TCPCLIENT_H

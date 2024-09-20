@@ -4,9 +4,18 @@
 #include <QDebug>
 
 MainController::MainController(QObject *parent)
-    : QObject(parent), client(new TCPClient(this)) {
+    : QObject(parent), client(new TCPClient(this)), updateTimer(new QTimer(this)) {
 
-  connect(client, &TCPClient::onReadyRead, this, &MainController::onClientResponse);
+  connect(client, &TCPClient::dataReceived, this, &MainController::onClientResponse);
+  connect(updateTimer, &QTimer::timeout, this, &MainController::requestBatteryInfo);
+}
+
+void MainController::startAutoUpdate(int intervalMs) {
+  updateTimer->start(intervalMs);
+}
+
+void MainController::stopAutoUpdate() {
+  updateTimer->stop();
 }
 
 void MainController::requestBatteryInfo() {
