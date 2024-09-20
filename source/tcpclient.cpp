@@ -8,27 +8,48 @@ TCPClient::TCPClient(QObject *parent) : QObject(parent), socket(new QTcpSocket(t
   connect(socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::errorOccurred), this, &TCPClient::onError);
 }
 
-void TCPClient::connectToServer(const QString &host, quint16 port) {
+bool TCPClient::startClient(const QHostAddress &address, quint16 port) {
   qDebug() << "Connecting to server...";
-  socket->connectToHost(host, port);
+  socket->connectToHost(address, port);
+  if (!socket->waitForConnected(3000)) {
+    qDebug() << "Failed to connect to server";
+    return false;
+  }
+  return true;
+}
+
+void TCPClient::stopClient() {
+  if (socket->isOpen()) {
+    socket->disconnectFromHost();
+    qDebug() << "Client disconnected from server.";
+  }
 }
 
 void TCPClient::sendBatteryInfoRequest() {
   QJsonObject request;
   request["action"] = "getBatteryInfo";
-  sendRequest(request);
+  QJsonDocument doc(request);
+  QByteArray data = doc.toJson();
+  socket->write(data);
+  socket->flush();
 }
 
 void TCPClient::sendSleepRequest() {
   QJsonObject request;
   request["action"] = "sleep";
-  sendRequest(request);
+  QJsonDocument doc(request);
+  QByteArray data = doc.toJson();
+  socket->write(data);
+  socket->flush();
 }
 
 void TCPClient::sendHibernateRequest() {
   QJsonObject request;
   request["action"] = "hibernate";
-  sendRequest(request);
+  QJsonDocument doc(request);
+  QByteArray data = doc.toJson();
+  socket->write(data);
+  socket->flush();
 }
 
 void TCPClient::onConnected() {
@@ -46,11 +67,4 @@ void TCPClient::onDisconnected() {
 
 void TCPClient::onError(QAbstractSocket::SocketError) {
   qDebug() << "Error:" << socket->errorString();
-}
-
-void TCPClient::sendRequest(const QJsonObject &request) {
-  QJsonDocument doc(request);
-  QByteArray data = doc.toJson();
-  socket->write(data);
-  socket->flush();
 }

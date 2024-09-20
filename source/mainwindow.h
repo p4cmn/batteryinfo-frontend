@@ -25,7 +25,7 @@ private:
   MainController* controller;
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow(MainController* controller, QWidget *parent = nullptr);
   ~MainWindow();
 
 private slots:

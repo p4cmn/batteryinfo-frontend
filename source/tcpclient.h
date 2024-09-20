@@ -15,22 +15,21 @@ private:
 public:
   explicit TCPClient(QObject *parent = nullptr);
 
-  void connectToServer(const QString &host, quint16 port);
+  bool startClient(const QHostAddress &address, quint16 port);
+  void stopClient();
+
   void sendBatteryInfoRequest();
   void sendSleepRequest();
   void sendHibernateRequest();
 
 signals:
-  void dataReceived(const QByteArray &data);  // Сигнал для передачи данных
+  void dataReceived(const QByteArray &data);
 
 public slots:
-  void onReadyRead();  // Слот для обработки ответа сервера
+  void onReadyRead();
   void onConnected();
   void onDisconnected();
   void onError(QAbstractSocket::SocketError socketError);
-
-private:
-  void sendRequest(const QJsonObject &request);
 };
 
 #endif // TCPCLIENT_H

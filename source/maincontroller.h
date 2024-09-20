@@ -13,7 +13,7 @@ private:
   QTimer* updateTimer;
 
 public:
-  explicit MainController(QObject *parent = nullptr);
+  explicit MainController(TCPClient* client, QObject *parent = nullptr);
   void startAutoUpdate(int intervalMs);
   void stopAutoUpdate();
   void requestBatteryInfo();

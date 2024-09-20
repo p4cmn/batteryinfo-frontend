@@ -3,8 +3,8 @@
 #include <QJsonObject>
 #include <QDebug>
 
-MainController::MainController(QObject *parent)
-    : QObject(parent), client(new TCPClient(this)), updateTimer(new QTimer(this)) {
+MainController::MainController(TCPClient* client, QObject *parent)
+    : QObject(parent), client(client), updateTimer(new QTimer(this)) {
 
   connect(client, &TCPClient::dataReceived, this, &MainController::onClientResponse);
   connect(updateTimer, &QTimer::timeout, this, &MainController::requestBatteryInfo);
