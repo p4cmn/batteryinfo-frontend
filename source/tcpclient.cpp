@@ -44,7 +44,7 @@ void TCPClient::onDisconnected() {
   qDebug() << "Disconnected from server.";
 }
 
-void TCPClient::onError(QAbstractSocket::SocketError socketError) {
+void TCPClient::onError(QAbstractSocket::SocketError) {
   qDebug() << "Error:" << socket->errorString();
 }
 

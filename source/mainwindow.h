@@ -11,6 +11,7 @@
 #include "powermode.h"
 #include "powersupplytype.h"
 #include "maincontroller.h"
+#include <QCloseEvent>
 
 namespace Ui { class MainWindow; }
 

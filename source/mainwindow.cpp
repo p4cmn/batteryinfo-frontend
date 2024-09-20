@@ -10,17 +10,18 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->setupUi(this);
 
-  connect(ui->sleepButton, &QPushButton::clicked, this, &MainWindow::handleSleepButtonClicked);
-  connect(ui->hibernateButton, &QPushButton::clicked, this, &MainWindow::handleHibernateButtonClicked);
   connect(controller, &MainController::batteryInfoReceived, this, &MainWindow::onBatteryInfoReceived);
 
-  setupSystemTray();
+  connect(ui->sleepButton, &QPushButton::clicked, this, &MainWindow::handleSleepButtonClicked);
+  connect(ui->hibernateButton, &QPushButton::clicked, this, &MainWindow::handleHibernateButtonClicked);
+  controller->startAutoUpdate(1000);
 
-  controller->requestBatteryInfo();
+  setupSystemTray();
 }
 
 MainWindow::~MainWindow() {
   delete ui;
+  controller->stopAutoUpdate();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
